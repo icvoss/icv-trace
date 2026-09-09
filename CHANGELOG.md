@@ -4,6 +4,9 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+- Added `HumanRenderer` and `HumanTraceSink` for bounded, readable projection
+  and optional exact JSONL fanout of trace records.
+
 ## [0.1.0rc2] - 2026-09-09
 
 ### Fixed

@@ -18,9 +18,12 @@ from .core import (
     emit_incomplete,
     trace,
 )
+from .human import HumanRenderer, HumanTraceSink
 
 __all__ = [
     "TextIOSink",
+    "HumanRenderer",
+    "HumanTraceSink",
     "TraceAttempt",
     "TraceConfigurationError",
     "TraceContext",
