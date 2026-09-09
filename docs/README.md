@@ -11,6 +11,6 @@ operation. These documents describe the stable v1 boundary in consumer terms.
   dependency-free command/pipeline/service example, including a simulated
   supervisor observation.
 
-The documents are public package copies of the current contract source. Each
-records its source revision and must be synchronised with it until the public
-graduation change makes these documents normative.
+These are the normative public package contracts. They retain their incubation
+source revision for provenance; changes to this package update these documents
+as part of the same release.

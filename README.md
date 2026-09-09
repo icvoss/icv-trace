@@ -14,14 +14,14 @@ error reporting, metrics and audit.
 ## Install
 
 ```bash
-pip install icv-trace
+python -m pip install "icv-trace==0.1.0rc4"
 ```
 
-`0.1.0rc3` is currently available from the private index at
-`pypi.icvoss.com`. A consuming environment uses its configured private-index
-credentials and installs by distribution name, never by a sibling path. Public
-PyPI installation will be documented here when the graduation release is
-published; do not assume that a public index contains this prerelease.
+Public release candidates use PyPI and an explicit version as shown above.
+`0.1.0rc3` remains available from the private index at `pypi.icvoss.com` for
+existing consumers. Validate the explicit PyPI version before removing a
+private extra index, and retain that index while any other private dependency
+requires it. Install by distribution name, never by a sibling path.
 
 ## Use
 

@@ -1,10 +1,10 @@
 # icv-trace contracts
 
-This document is the public copy of the v1 package contract. It is derived
-from `docs/specs/icv-trace/CONTRACTS.md` in the ICV OSS umbrella at revision
-`67bcccd51d4b564b472e62f1d668e802f39c1942` (2026-09-09). Until the
-graduation change moves normative ownership, keep the two documents in sync;
-the umbrella document resolves a conflict.
+This is the normative v1 package contract. It was derived from
+`docs/specs/icv-trace/CONTRACTS.md` in the ICV OSS umbrella at revision
+`67bcccd51d4b564b472e62f1d668e802f39c1942` (2026-09-09), retained as
+incubation provenance. Future package changes update this document in the same
+release.
 
 `icv-trace` consumes named meaningful operations, caller-selected safe scalar
 facts, a resolved `TracePolicy`, `TraceSinks`, and optional parent, retry or

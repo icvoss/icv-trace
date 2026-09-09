@@ -1,9 +1,10 @@
 # Human renderer
 
-This document is the public copy of the human-renderer contract, derived from
+This is the normative human-renderer contract. It was derived from
 `docs/specs/icv-trace/HUMAN-RENDERER.md` in the ICV OSS umbrella at revision
-`67bcccd51d4b564b472e62f1d668e802f39c1942` (2026-09-09). Keep it synchronised
-with that source until graduation changes normative ownership.
+`67bcccd51d4b564b472e62f1d668e802f39c1942` (2026-09-09), retained as
+incubation provenance. Future package changes update this document in the same
+release.
 
 `HumanRenderer` turns one admitted `icv-trace.record.v1` JSONL record into a
 compact, LF-terminated line. `HumanTraceSink` renders the structured line and
