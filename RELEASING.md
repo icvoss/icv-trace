@@ -1,8 +1,9 @@
 # Releasing icv-trace
 
-`0.1.0rc3` remains available from the private index at `pypi.icvoss.com`.
-The public repository publishes new releases to PyPI through the GitHub Actions
-trusted publisher.
+The public repository publishes releases to PyPI through the GitHub Actions
+trusted publisher. The private-index transition is complete: known consumers
+use public `0.1.0rc4`, and the former private rc2/rc3 distributions are archived
+outside the served index for operator recovery.
 Pushing a `v<semver>` tag is irreversible and must point to the merged `main`
 commit.
 

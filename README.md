@@ -18,10 +18,12 @@ python -m pip install "icv-trace==0.1.0rc4"
 ```
 
 Public release candidates use PyPI and an explicit version as shown above.
-`0.1.0rc3` remains available from the private index at `pypi.icvoss.com` for
-existing consumers. Validate the explicit PyPI version before removing a
-private extra index, and retain that index while any other private dependency
-requires it. Install by distribution name, never by a sibling path.
+Public PyPI is the distribution source. The former private rc2/rc3
+distributions have been archived after the known consumers migrated to rc4.
+If an older lockfile still pins a private release, update its trace constraint
+and regenerate the lock against PyPI. Retain a private extra index while any
+other private dependency requires it. Install by distribution name, never by
+a sibling path.
 
 ## Use
 
