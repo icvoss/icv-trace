@@ -23,7 +23,7 @@ Record all six gates for the exact commit:
    cleanly and import the package. After publication repeat the installation
    by name from the private index.
 5. Review the tagged commit's own `publish.yml`.
-6. State all existing-consumer behaviour in the release notes. For `0.1.0rc1`,
+6. State all existing-consumer behaviour in the release notes. For `0.1.0rc2`,
    the public core and `TextIOSink` API are unchanged from incubation; the
    package home changes to index installation. Logging, Eliot and OpenTelemetry
    helpers remain experimental and unsupported.
@@ -33,8 +33,8 @@ Record all six gates for the exact commit:
 ```bash
 git checkout main
 git pull
-git tag v0.1.0rc1
-git push origin v0.1.0rc1
+git tag v0.1.0rc2
+git push origin v0.1.0rc2
 ```
 
 Confirm the workflow publishes to the private index, creates the prerelease,

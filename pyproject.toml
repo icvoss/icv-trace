@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "icv-trace"
-version = "0.1.0rc1"
+version = "0.1.0rc2"
 description = "Bounded operation diagnostics, correlation and output health for Python hosts"
 readme = "README.md"
 license = { text = "MIT" }

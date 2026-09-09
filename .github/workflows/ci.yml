@@ -48,6 +48,7 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy src/icv_trace
+      - run: python scripts/check_publish_workflow.py
 
   test:
     name: Test (Python ${{ matrix.python-version }})
