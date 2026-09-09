@@ -1,0 +1,29 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+## [Unreleased]
+
+## [0.1.0rc1] - 2026-09-09
+
+### Added
+
+- Extracted the pure-Python trace core from icvlocal at source commit
+  `087479b96929a56447c2ac8011011023b4df2dcd`.
+- Added bounded lifecycle diagnostics, correlation context, sink health and
+  same-thread callback capture as the initial private release candidate.
+
+### Changed
+
+- Existing incubated consumers keep the same public API and runtime behaviour.
+  The implementation is now distributed as `icv-trace` for index installation.
+
+### Release gate record
+
+- The release owner completes and records all six private release gates on the
+  exact tagged commit before pushing `v0.1.0rc1`: version and changelog,
+  green CI, clean publish-workflow simulation, artefact inspection and clean
+  installation, tagged-workflow review, and consumer-facing behaviour notes.
+
+[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc1...HEAD
+[0.1.0rc1]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc1
