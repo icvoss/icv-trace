@@ -72,7 +72,79 @@ The supported package-root exports are `trace`, `bind_trace`,
 `current_trace_context`, `emit_incomplete`, `capture_callback`, `TracePolicy`,
 `TraceSinks`, `TraceContext`, `TraceAttempt`, `TraceIncomplete`,
 `TraceOutputHealth`, `TraceHandle`, `TextIOSink`, `textio_sink`,
-`TraceInputError`, `TraceConfigurationError` and `TraceSinkError`.
+`HumanRenderer`, `HumanTraceSink`, `TraceInputError`,
+`TraceConfigurationError` and `TraceSinkError`.
+
+## Readable projection of structured traces
+
+`HumanRenderer` turns admitted JSONL records into compact, indented terminal
+lines. It has no Django or worker dependency and only retains a bounded set of
+open span identities for indentation. `HumanTraceSink` makes this useful with
+the existing core: bind the core to its `structured` input, then it writes the
+readable line and optionally forwards the original JSONL line unchanged.
+
+```python
+import sys
+from secrets import token_hex
+
+from icv_trace import (
+    HumanTraceSink, TraceContext, TraceIncomplete, TracePolicy, TraceSinks,
+    bind_trace, emit_incomplete, textio_sink, trace,
+)
+
+human_sink = HumanTraceSink(human=textio_sink(sys.stderr))
+policy = TracePolicy(TRACE_ENABLED=True, TRACE_DESTINATIONS=("structured",))
+run = bind_trace(lambda: policy, TraceSinks(structured=human_sink))
+
+with run("example.command", entrypoint="management_command") as command:
+    with trace("example.pipeline"):
+        with trace("example.service") as service:
+            service.note("loaded", count=2)
+            service.result(count=2)
+    command.result(completed=True)
+    command_context = command.context
+
+# This simulates a supervisor observation of a context it saved at dispatch.
+# A missing END alone never authorises an incomplete record.
+assert command_context is not None
+remote_context = TraceContext(command_context.trace_id, token_hex(8), token_hex(16), command_context.span_id)
+emit_incomplete(
+    TraceIncomplete(remote_context, "example.worker.task", "worker_lost"),
+    policy=policy,
+    sinks=TraceSinks(structured=human_sink),
+)
+```
+
+Labels can replace operation names for a particular host:
+
+```python
+from icv_trace import HumanRenderer
+
+renderer = HumanRenderer(labels={"example.command": "import command"})
+```
+
+Retry and continuation records include their attempt kind and number in this
+view. Correlation IDs remain in the original JSONL rather than the compact
+line. `HumanTraceSink.output_health` is sticky and must be checked separately
+from core trace health because the core sees the composite as one destination.
+The host owns prompt flushing: `textio_sink()` does not flush or close the
+stream. The human and optional JSONL callables must be different underlying
+channels. The adapter rejects the same callable object, but cannot detect two
+wrappers around one stream. Do not make either destination call the same
+`HumanTraceSink` recursively. If the host's warning channel is also broken,
+it cannot report that diagnostic failure elsewhere.
+
+The runnable dependency-free example mirrors a command invoking a pipeline of
+services. It writes compact output to stderr, can fan the original JSONL to a
+new file, and labels the remote incomplete record as an explicit simulated
+supervisor observation rather than an inference from a missing END.
+
+```bash
+python examples/human_trace.py
+python examples/human_trace.py --detail --jsonl-file trace.jsonl
+python examples/human_trace.py --fail
+python examples/human_trace.py --simulate-worker-lost
+```
 
 The authoritative consumes, does and produces contract is maintained in the
 [ICV Trace specification](https://github.com/icvoss/icv-oss-umbrella/tree/main/docs/specs/icv-trace).
