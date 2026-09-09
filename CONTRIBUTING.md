@@ -24,8 +24,8 @@ Use conventional commits and work on a branch. Public behaviour is the
 package-root API and the `icv-trace.*.v1` contracts in
 [docs/contracts.md](docs/contracts.md). Preserve caller ownership of domain
 truth and safe facts, and host ownership of settings, transport, audit and
-error reporting. Until public graduation moves normative ownership, update
-the package contract copy and the recorded umbrella source together.
+error reporting. Update the normative package contracts in `docs/` alongside
+any change to supported behaviour.
 
 ## Test modes
 
@@ -35,6 +35,6 @@ import path and fails unless `icv_trace` resolves from `site-packages`.
 
 ## Releasing
 
-See [RELEASING.md](RELEASING.md). A `v<version>` tag currently publishes to
-the private index, so it is pushed only after all release gates pass on that
-exact commit. The release guide records the separate public-PyPI transition.
+See [RELEASING.md](RELEASING.md). A `v<version>` tag publishes to PyPI, so it
+is pushed only after all release gates pass on that exact commit. The release
+guide also records the transition for existing private-index consumers.

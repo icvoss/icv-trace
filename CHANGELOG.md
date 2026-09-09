@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0rc4] - 2026-09-09
+
 ### Changed
 
 - Prepared the CI and tag workflow for public PyPI publishing through a PyPI
@@ -11,6 +13,14 @@ All notable changes to this project are documented in this file.
   that `human.py` is included in the wheel.
 - Added self-contained public contracts and renderer guides, contributor and
   release instructions, and source-distribution copies of docs and examples.
+
+### Consumer behaviour
+
+- Runtime behaviour and the supported package-root API are unchanged from
+  `0.1.0rc3`. This release moves the distribution target to PyPI. Private-index
+  consumers should validate an explicit `0.1.0rc4` PyPI install before removing
+  their private extra index, and retain that index while other private packages
+  still need it.
 
 ## [0.1.0rc3] - 2026-09-09
 
@@ -63,7 +73,8 @@ All notable changes to this project are documented in this file.
   green CI, clean publish-workflow simulation, artefact inspection and clean
   installation, tagged-workflow review, and consumer-facing behaviour notes.
 
-[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc3...HEAD
+[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc4...HEAD
+[0.1.0rc4]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc4
 [0.1.0rc3]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc3
 [0.1.0rc2]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc2
 [0.1.0rc1]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc1
