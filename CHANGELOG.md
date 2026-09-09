@@ -4,8 +4,21 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0rc3] - 2026-09-09
+
+### Added
+
 - Added `HumanRenderer` and `HumanTraceSink` for bounded, readable projection
   and optional exact JSONL fanout of trace records.
+
+### Consumer behaviour
+
+- Existing trace bindings, canonical human output, structured records and
+  admission budgets retain their behaviour. Readable rendering is opt-in:
+  hosts bind `HumanTraceSink` as the structured destination and inspect its
+  output health separately from core health. Its human view omits correlation
+  IDs; optional JSONL fanout preserves the original records. The core charges
+  structured bytes, not downstream presentation/fanout bytes.
 
 ## [0.1.0rc2] - 2026-09-09
 
@@ -42,6 +55,7 @@ All notable changes to this project are documented in this file.
   green CI, clean publish-workflow simulation, artefact inspection and clean
   installation, tagged-workflow review, and consumer-facing behaviour notes.
 
-[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc2...HEAD
+[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc3...HEAD
+[0.1.0rc3]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc3
 [0.1.0rc2]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc2
 [0.1.0rc1]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc1
