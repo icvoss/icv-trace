@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Prepared the CI and tag workflow for public PyPI publishing through a PyPI
+  trusted publisher on GitHub-hosted runners. The release gate now also checks
+  that `human.py` is included in the wheel.
+- Added self-contained public contracts and renderer guides, contributor and
+  release instructions, and source-distribution copies of docs and examples.
+
 ## [0.1.0rc3] - 2026-09-09
 
 ### Added

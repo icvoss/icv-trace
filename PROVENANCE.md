@@ -1,4 +1,9 @@
-# Extraction provenance
+# Historical extraction provenance
+
+This record explains the private incubation history. It is not required to
+install or use the package. Current public contracts are in
+[`docs/contracts.md`](docs/contracts.md) and
+[`docs/human-renderer.md`](docs/human-renderer.md).
 
 The package was extracted from site commit
 `087479b96929a56447c2ac8011011023b4df2dcd`, which includes the initial trial
@@ -26,7 +31,10 @@ non-behavioural annotations and casts required by the blocking mypy gate, and
 removes one unused test import. The archived hashes above remain provenance for
 the source history; they are not hashes of the extracted files.
 
-The rejected comparison-adapter delivery selector is not a supported API.
-`TextIOSink` and `textio_sink` are the only supported delivery helpers; the
-core API remains public. Logging, Eliot and OpenTelemetry helpers remain
-experimental comparison code, with no delivery or conformance promise.
+At extraction time, the rejected comparison-adapter delivery selector was not
+a supported API. The historical statement that `TextIOSink` and `textio_sink`
+were the only supported delivery helpers predates the released human renderer.
+Today, `HumanRenderer` and `HumanTraceSink` are supported package-root APIs;
+the complete current surface is documented in the README. Logging, Eliot and
+OpenTelemetry helpers remain experimental comparison code, with no delivery or
+conformance promise.
