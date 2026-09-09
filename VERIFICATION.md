@@ -1,15 +1,29 @@
-# Incubation verification retained as provenance
+# Verification
 
-On 2026-09-08, this site worktree was installed into a fresh Python 3.12
-environment from `requirements.txt` by package name using the private index.
-The CI-equivalent ruff, Django system check, migration-drift check, fresh
-migration and pytest gates passed: 471 passed, 1 expected failure.
+The package verifies its supported pure-Python API, including the core trace
+contract and human renderer. The normal development commands are:
 
-The workflow's mypy leg remains advisory. It reported the existing legacy
-backlog and did not affect the green CI result. This differs from Cookie
-Scan's installed-wheel consumer mypy gate, which is a required package CI
-check and passed for the candidate wheel.
+```bash
+ruff check .
+ruff format --check .
+mypy src/icv_trace
+pytest tests -v --tb=short
+```
 
-This records site-incubation evidence only. It predates this extracted package
-and does not prove the package wheel, private-index release or consumer
-cutover. Those checks are recorded by the six release gates in `RELEASING.md`.
+CI runs those checks across Python 3.11 through 3.14. It also builds a wheel,
+installs it without the repository source on the import path, and runs the
+suite with `ICV_TRACE_REQUIRE_WHEEL=1`. This proves that documented public
+imports resolve from `site-packages`, including `HumanRenderer` and
+`HumanTraceSink`.
+
+Before any release, follow the exact-commit gates in [RELEASING.md](RELEASING.md):
+CI parity, a clean reproduction of the publish workflow, artefact inspection,
+and an installation by name from the target index. Consumer hosts separately
+prove their policy resolution, safe projection, context propagation and
+supervision integrations because those behaviours remain host-owned.
+
+## Historical incubation evidence
+
+The package originated in a site trial. Its archived checksums and site-only
+verification are retained in [PROVENANCE.md](PROVENANCE.md). They explain the
+extraction history but do not replace this package's wheel and release checks.

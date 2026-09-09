@@ -17,9 +17,11 @@ error reporting, metrics and audit.
 pip install icv-trace
 ```
 
-Private releases are published to `pypi.icvoss.com`. A consuming environment
-uses its configured private-index credentials and installs by distribution
-name, never by a sibling path.
+`0.1.0rc3` is currently available from the private index at
+`pypi.icvoss.com`. A consuming environment uses its configured private-index
+credentials and installs by distribution name, never by a sibling path. Public
+PyPI installation will be documented here when the graduation release is
+published; do not assume that a public index contains this prerelease.
 
 ## Use
 
@@ -73,7 +75,8 @@ The supported package-root exports are `trace`, `bind_trace`,
 `TraceSinks`, `TraceContext`, `TraceAttempt`, `TraceIncomplete`,
 `TraceOutputHealth`, `TraceHandle`, `TextIOSink`, `textio_sink`,
 `HumanRenderer`, `HumanTraceSink`, `TraceInputError`,
-`TraceConfigurationError` and `TraceSinkError`.
+`TraceConfigurationError` and `TraceSinkError`. The complete v1 input, output,
+failure and compatibility contracts are in [docs/contracts.md](docs/contracts.md).
 
 ## Readable projection of structured traces
 
@@ -137,7 +140,9 @@ it cannot report that diagnostic failure elsewhere.
 The runnable dependency-free example mirrors a command invoking a pipeline of
 services. It writes compact output to stderr, can fan the original JSONL to a
 new file, and labels the remote incomplete record as an explicit simulated
-supervisor observation rather than an inference from a missing END.
+supervisor observation rather than an inference from a missing END. The
+[human-renderer guide](docs/human-renderer.md) covers labels, bounded nesting,
+fanout, health and host-owned task supervision.
 
 ```bash
 python examples/human_trace.py
@@ -146,8 +151,6 @@ python examples/human_trace.py --fail
 python examples/human_trace.py --simulate-worker-lost
 ```
 
-The authoritative consumes, does and produces contract is maintained in the
-[ICV Trace specification](https://github.com/icvoss/icv-oss-umbrella/tree/main/docs/specs/icv-trace).
 The same-thread `capture_callback()` bridge is bounded to its live owner and
 creator thread. It does not register callbacks or transfer work across
 threads or processes.
@@ -168,10 +171,21 @@ The normal development suite permits the editable install. CI and release
 verification also build a wheel, install it without the source tree on the
 import path, and assert that `icv_trace` resolves from `site-packages`.
 
+## Documentation
+
+- [Contracts](docs/contracts.md): v1 inputs, policy and limits, records,
+  output health, task context and compatibility.
+- [Human renderer](docs/human-renderer.md): readable services, commands,
+  pipelines and task observations.
+- [Example](examples/human_trace.py): runnable dependency-free program.
+- [Contributing](CONTRIBUTING.md), [verification](VERIFICATION.md), and
+  [releasing](RELEASING.md): development and publication practice.
+
 ## Provenance
 
 This package extracts the site-owned incubation core from icvlocal commit
 `087479b96929a56447c2ac8011011023b4df2dcd`. See
-[PROVENANCE.md](PROVENANCE.md) for archived trial hashes and the extraction
-adaptations. Extraction is governed by
-[ADR-103](https://github.com/icvoss/icv-oss-umbrella/blob/main/docs/adrs/ADR-103-extract-icv-trace.md).
+[PROVENANCE.md](PROVENANCE.md) for historical source, retained hashes and
+extraction adaptations. The public package documentation above is sufficient
+to install and use the distribution; the historical material is not a runtime
+dependency.

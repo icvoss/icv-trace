@@ -25,7 +25,7 @@ dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/icvoss/icv-trace"
-Documentation = "https://github.com/icvoss/icv-oss-umbrella/tree/main/docs/specs/icv-trace"
+Documentation = "https://github.com/icvoss/icv-trace/tree/main/docs"
 Changelog = "https://github.com/icvoss/icv-trace/blob/main/CHANGELOG.md"
 "Issue Tracker" = "https://github.com/icvoss/icv-trace/issues"
 Source = "https://github.com/icvoss/icv-trace"

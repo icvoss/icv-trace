@@ -1,23 +1,31 @@
-name: Publish icv-trace to the private index
+name: Publish icv-trace to PyPI
 
-# Pure-Python private-index adaptation of templates/repo/publish-private.yml. The
-# tagged workflow repeats lint, mypy and an installed-wheel suite before build.
+# Pure-Python rendering of templates/repo/publish-python.yml. The public
+# workflow uses GitHub-hosted runners and PyPI OIDC, not private-index netrc.
+# PyPI trusted publisher setup remains an external graduation prerequisite.
 on:
   push:
     tags: ["v*"]
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FORCE_COLOR: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_PYTHON_VERSION_WARNING: "1"
+  PACKAGE_NAME: icv-trace
+  REQUIRED_WHEEL_FILES: >-
+    icv_trace/adapters.py icv_trace/core.py icv_trace/human.py
+    icv_trace/py.typed
 
 jobs:
   resolve:
-    runs-on: [self-hosted, icv-vps]
+    name: Resolve version from tag
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.parse.outputs.version }}
+      release_title: ${{ steps.parse.outputs.release_title }}
       prerelease: ${{ steps.parse.outputs.prerelease }}
     steps:
       - id: parse
@@ -25,6 +33,7 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           test -n "$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release_title=icv-trace v$version" >> "$GITHUB_OUTPUT"
           if [[ "$version" =~ ^0\. || "$version" =~ (a|b|rc|alpha|beta|dev)[0-9]* ]]; then
             echo "prerelease=true" >> "$GITHUB_OUTPUT"
           else
@@ -61,36 +70,25 @@ jobs:
           PY
 
   verify:
-    runs-on: [self-hosted, icv-vps]
+    name: Static and installed-wheel gates
+    runs-on: ubuntu-latest
     needs: resolve
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Create a job-local virtualenv
-        run: |
-          python -m venv .venv
-          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
       - name: Install the publish verification list
         run: |
           python -m pip install --upgrade pip build pytest "ruff==0.15.22" "mypy>=1.11"
           python -m build --wheel --outdir dist
           pip install --no-deps dist/*.whl
-      - name: Verify no sibling repo leaked onto sys.path
-        run: |
-          python - <<'PY'
-          import importlib.util, os, sys
-          workspace = os.path.realpath(os.environ["GITHUB_WORKSPACE"])
-          work_root = os.path.realpath(os.path.join(workspace, "..", ".."))
-          spec = importlib.util.find_spec("icv_trace")
-          assert spec and spec.origin, "icv_trace is not importable"
-          origin = os.path.realpath(spec.origin)
-          assert not origin.startswith(work_root + os.sep) or origin.startswith(workspace + os.sep), origin
-          PY
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy src/icv_trace
+      - name: Confirm the package resolves from the installed wheel
+        run: |
+          python -c "import os, icv_trace; origin = os.path.realpath(icv_trace.__file__); assert 'site-packages' in origin, origin"
       - name: Test the installed wheel
         run: pytest tests -v --tb=short --color=yes -o pythonpath=tests
         env:
@@ -98,17 +96,14 @@ jobs:
           PYTHONPATH: tests
 
   build:
-    runs-on: [self-hosted, icv-vps]
+    name: Build distributions
+    runs-on: ubuntu-latest
     needs: [resolve, verify]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Create a job-local virtualenv
-        run: |
-          python -m venv .venv
-          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
       - name: Build and inspect distributions
         run: |
           python -m pip install --upgrade pip build twine
@@ -116,11 +111,12 @@ jobs:
           twine check dist/*
           python - <<'PY'
           import glob
+          import os
           import zipfile
 
           with zipfile.ZipFile(glob.glob("dist/*.whl")[0]) as wheel:
               names = set(wheel.namelist())
-          required = {"icv_trace/core.py", "icv_trace/adapters.py", "icv_trace/py.typed"}
+          required = set(os.environ["REQUIRED_WHEEL_FILES"].split())
           missing = required - names
           assert not missing, f"wheel is missing: {sorted(missing)}"
           PY
@@ -128,32 +124,31 @@ jobs:
         with:
           name: dist-${{ needs.resolve.outputs.version }}
           path: dist/
+          if-no-files-found: error
 
   publish:
-    runs-on: [self-hosted, icv-vps]
+    name: Publish icv-trace to PyPI
+    runs-on: ubuntu-latest
     needs: [resolve, build]
-    environment: private-pypi
+    environment: pypi
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
       - uses: actions/download-artifact@v8
         with:
           name: dist-${{ needs.resolve.outputs.version }}
           path: dist/
-      - name: Publish to pypi.icvoss.com using runner netrc credentials
-        run: |
-          python3 -m venv "$RUNNER_TEMP/twine-venv"
-          "$RUNNER_TEMP/twine-venv/bin/pip" install --quiet --upgrade twine
-          netrc="$HOME/.netrc"
-          grep -q "machine pypi.icvoss.com" "$netrc"
-          export TWINE_USERNAME="$(awk '/machine pypi.icvoss.com/{f=1} f && /login/{print $2; exit}' "$netrc")"
-          export TWINE_PASSWORD="$(awk '/machine pypi.icvoss.com/{f=1} f && /password/{print $2; exit}' "$netrc")"
-          "$RUNNER_TEMP/twine-venv/bin/twine" upload --non-interactive --repository-url https://pypi.icvoss.com/ dist/*
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          verbose: true
 
   release:
-    runs-on: [self-hosted, icv-vps]
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
     needs: [resolve, publish]
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -164,7 +159,8 @@ jobs:
           path: dist/
       - uses: softprops/action-gh-release@v3
         with:
-          name: icv-trace v${{ needs.resolve.outputs.version }}
+          name: ${{ needs.resolve.outputs.release_title }}
           files: dist/*
           generate_release_notes: true
           prerelease: ${{ needs.resolve.outputs.prerelease }}
+          fail_on_unmatched_files: true
