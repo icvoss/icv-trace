@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "icv-trace"
+version = "0.1.0rc1"
+description = "Bounded operation diagnostics, correlation and output health for Python hosts"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "Nigel Copley" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+keywords = ["diagnostics", "observability", "trace", "tracing"]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/icvoss/icv-trace"
+Documentation = "https://github.com/icvoss/icv-oss-umbrella/tree/main/docs/specs/icv-trace"
+Changelog = "https://github.com/icvoss/icv-trace/blob/main/CHANGELOG.md"
+"Issue Tracker" = "https://github.com/icvoss/icv-trace/issues"
+Source = "https://github.com/icvoss/icv-trace"
+
+[project.optional-dependencies]
+dev = ["mypy>=1.11", "pytest>=8", "ruff>=0.15"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+icv_trace = ["py.typed"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "N", "SIM"]
+ignore = ["E501", "SIM105"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["icv_trace"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src/icv_trace"]
+strict = false
