@@ -177,7 +177,9 @@ class IntegerSubclass(int):
     pass
 
 
-@pytest.mark.parametrize("bad", ["x\n", "x\u200b", b"x", [], {"x": 1}, 2**63, float("nan"), IntegerSubclass(1)])
+@pytest.mark.parametrize(
+    "bad", ["x\n", "x\u200b", "x" * 257, b"x", [], {"x": 1}, 2**63, float("nan"), IntegerSubclass(1)]
+)
 def test_ac_trace_004_public_scalar_boundary_rejects_bad_values(bad):
     with pytest.raises(TraceInputError), bound(Lines())("safe.operation", value=bad):
         pass
@@ -460,8 +462,22 @@ def test_ac_trace_011_hostmap_consumer_proof_is_external_to_adapter_conformance(
 
 def test_ac_trace_012_stdout_and_sink_acknowledgement_contract(capsys):
     business = b"HOSTMAP-RESULT\n"
-    print(business.decode(), end="")
-    assert capsys.readouterr().out.encode() == business
+
+    def run(*, enabled: bool) -> Lines:
+        structured = Lines()
+        call = bind_trace(
+            lambda: policy(TRACE_ENABLED=enabled, TRACE_DESTINATIONS=("structured",)),
+            TraceSinks(structured=structured),
+        )
+        with call("hostmap.resolve") as handle:
+            print(business.decode(), end="")
+            handle.result(domain_outcome="resolved")
+        assert structured.lines, "structured sink must receive records"
+        return structured
+
+    assert run(enabled=False) and capsys.readouterr().out.encode() == business
+    assert run(enabled=True) and capsys.readouterr().out.encode() == business
+
     bad = Lines(returns="short")
     with bound(bad)("op") as handle:
         pass
