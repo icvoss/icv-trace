@@ -4,6 +4,24 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0rc5] - 2026-09-11
+
+### Fixed
+
+- Strengthened AC-TRACE-004 and AC-TRACE-012 acceptance coverage: oversized
+  strings are rejected in the public scalar suite, and business stdout stays
+  byte-identical with detail off and on while structured output uses a separate
+  sink.
+- Published install guidance matches the completed public-index closeout. The
+  previous PyPI long description for `0.1.0rc4` still mentioned the private
+  index for rc3 after those artefacts were archived.
+
+### Consumer behaviour
+
+- Runtime API and record semantics are unchanged from `0.1.0rc4`. Existing
+  consumers may stay on rc4; upgrade to rc5 for the corrected PyPI description
+  and the stronger acceptance suite only.
+
 ## [0.1.0rc4] - 2026-09-09
 
 ### Changed
@@ -73,7 +91,8 @@ All notable changes to this project are documented in this file.
   green CI, clean publish-workflow simulation, artefact inspection and clean
   installation, tagged-workflow review, and consumer-facing behaviour notes.
 
-[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc4...HEAD
+[Unreleased]: https://github.com/icvoss/icv-trace/compare/v0.1.0rc5...HEAD
+[0.1.0rc5]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc5
 [0.1.0rc4]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc4
 [0.1.0rc3]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc3
 [0.1.0rc2]: https://github.com/icvoss/icv-trace/releases/tag/v0.1.0rc2

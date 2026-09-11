@@ -25,9 +25,10 @@ Record all six gates for the exact commit:
    install the wheel cleanly and import the documented package-root API. After
    publication repeat the installation by name from the target index.
 5. Review the tagged commit's own `publish.yml`.
-6. State all existing-consumer behaviour in the release notes. For `0.1.0rc3`,
-   the human renderer is opt-in and core record semantics remain unchanged.
-   Logging, Eliot and OpenTelemetry helpers remain experimental and unsupported.
+6. State all existing-consumer behaviour in the release notes. For `0.1.0rc5`,
+   acceptance coverage and published install guidance change; core record
+   semantics remain unchanged from `0.1.0rc4`. Logging, Eliot and OpenTelemetry
+   helpers remain experimental and unsupported.
 
 ## Tag
 

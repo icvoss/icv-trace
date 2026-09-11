@@ -14,7 +14,7 @@ error reporting, metrics and audit.
 ## Install
 
 ```bash
-python -m pip install "icv-trace==0.1.0rc4"
+python -m pip install "icv-trace==0.1.0rc5"
 ```
 
 Public release candidates use PyPI and an explicit version as shown above.
