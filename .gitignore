@@ -1,4 +1,8 @@
+# Suffixed venv forms: icvoss/icv-oss-umbrella#675
 .venv/
+.venv*/
+venv/
+venv*/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
